@@ -5,9 +5,10 @@ import android.arch.persistence.room.Ignore;
 import android.arch.persistence.room.PrimaryKey;
 
 import java.io.Serializable;
+import java.util.List;
 
 @Entity(tableName = AppDatabase.TABLE_NAME_GROCIPE)
-public class Grocipe implements Serializable{
+public class Grocipe implements Serializable {
 
     @PrimaryKey(autoGenerate = true)
     public int groceryItem_id;
@@ -17,5 +18,4 @@ public class Grocipe implements Serializable{
     public String recipe;
 
     public String mealtype;
-
 }

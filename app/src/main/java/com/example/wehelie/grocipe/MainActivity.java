@@ -58,7 +58,7 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewAdapt
         recyclerView.setAdapter(recyclerViewAdapter);
 
         gDatabase = Room.databaseBuilder(getApplicationContext(), AppDatabase.class, AppDatabase.DATABASE_NAME).fallbackToDestructiveMigration().build();
-        checkFirstRun();
+        checkFirstRun(savedInstanceState);
 
         menu.setOnItemSelectedListener(this);
         menu.setSelection(0);
@@ -103,10 +103,10 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewAdapt
         }
     }
 
-    private void checkFirstRun() {
+    private void checkFirstRun(Bundle savedInstanceState) {
      Boolean isFirstRun = getSharedPreferences("PREFERENCE", MODE_PRIVATE).getBoolean("isFirstRun", true);
 
-     if (isFirstRun) {
+     if (isFirstRun && null == savedInstanceState) {
          Toasty.success(getApplicationContext(), "Click on the + button to start", Toast.LENGTH_SHORT).show();
          Grocipe grocipe = new Grocipe();
          grocipe.dishName = "Pizza";
@@ -114,7 +114,9 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewAdapt
          grocipe.recipe = "Blue Cheese, Walnut, and Pear Pizza";
 
          grocipeArrayList.add(grocipe);
+
          insertGrocipeList(grocipeArrayList);
+
      }
     }
 
@@ -197,11 +199,13 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewAdapt
         new AsyncTask<String, Void, List<Grocipe>>() {
             @Override
             protected List<Grocipe> doInBackground(String... lists) {
+
                 return gDatabase.GrocipeDao().fetchAllGrocipe();
             }
 
             @Override
             protected void onPostExecute(List<Grocipe> grocipeList) {
+
                 recyclerViewAdapter.updateGrocipeList(grocipeList);
             }
         }.execute();
