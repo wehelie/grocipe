@@ -6,6 +6,7 @@ import android.content.Context;
 import android.os.IBinder;
 import android.support.test.InstrumentationRegistry;
 import android.support.test.espresso.Root;
+import android.support.test.espresso.UiController;
 import android.support.test.espresso.ViewAction;
 import android.support.test.espresso.ViewInteraction;
 import android.support.test.espresso.action.ViewActions;
@@ -217,6 +218,11 @@ public class MainActivityTest {
         onView(ViewMatchers.withId(R.id.recyclerView)).perform(RecyclerViewActions.actionOnItemAtPosition(1, ViewActions.longClick()));
     }
 
+    @Test
+    public void deleteGrocipeItem() {
+        scrollToPosition();
+        onView(withId(R.id.delete)).perform(click());
+    }
 
 
 

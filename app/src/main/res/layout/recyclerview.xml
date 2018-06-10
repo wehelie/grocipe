@@ -28,6 +28,7 @@
                 android:textColor="?attr/actionModeSplitBackground" />
 
             <LinearLayout
+                android:id="@+id/cardv"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_toRightOf="@+id/recipeNumber"
