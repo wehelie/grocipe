@@ -3,7 +3,7 @@ package com.example.wehelie.grocipe;
 import android.arch.persistence.room.Database;
 import android.arch.persistence.room.RoomDatabase;
 
-@Database(entities = {Grocipe.class}, version = 2, exportSchema = false)
+@Database(entities = {Grocipe.class}, version = 1, exportSchema = false)
 public abstract class AppDatabase extends RoomDatabase {
 
     public static final String DATABASE_NAME = "GrocipeDB";

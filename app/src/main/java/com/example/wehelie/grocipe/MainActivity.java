@@ -62,7 +62,7 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewAdapt
 
         // Creates a RoomDatabase.Builder for a persistent database.
         gDatabase = Room.databaseBuilder(getApplicationContext(), AppDatabase.class, AppDatabase.DATABASE_NAME).fallbackToDestructiveMigration().build();
-        //checkFirstRun(savedInstanceState);
+        checkFirstRun(savedInstanceState);
 
         // register a callback to be invoked when an item in this AdapterView has been selected.
         menu.setOnItemSelectedListener(this);
@@ -111,20 +111,20 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewAdapt
         }
     }
 
-//    private void checkFirstRun(Bundle savedInstanceState) {
-//     Boolean isFirstRun = getSharedPreferences(Constants.PREFS, MODE_PRIVATE).getBoolean("isFirstRun", true);
-//
-//     if (isFirstRun && null == savedInstanceState) {
-//         Toasty.success(getApplicationContext(), "Click on the + button to start", Toast.LENGTH_SHORT).show();
-//         Grocipe grocipe = new Grocipe();
-//         grocipe.dishName = "Pizza";
-//         grocipe.mealtype = "Lunch";
-//         grocipe.recipe = "Blue Cheese, Walnut, and Pear Pizza";
-//
-//         grocipeArrayList.add(grocipe);
-//         insertGrocipeList(grocipeArrayList);
-//     }
-//    }
+    private void checkFirstRun(Bundle savedInstanceState) {
+     Boolean isFirstRun = getSharedPreferences(Constants.PREFS, MODE_PRIVATE).getBoolean("isFirstRun", true);
+
+     if (isFirstRun && null == savedInstanceState) {
+         Toasty.success(getApplicationContext(), "Click on the + button to start", Toast.LENGTH_SHORT).show();
+         Grocipe grocipe = new Grocipe();
+         grocipe.dishName = "Pizza";
+         grocipe.mealtype = "Lunch";
+         grocipe.recipe = "Blue Cheese, Walnut, and Pear Pizza";
+
+         grocipeArrayList.add(grocipe);
+         insertGrocipeList(grocipeArrayList);
+     }
+    }
 
     @SuppressLint("StaticFieldLeak")
     private void insertGrocipeList(List<Grocipe> grocipeList) {
