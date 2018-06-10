@@ -39,6 +39,7 @@ import static android.support.test.espresso.action.ViewActions.typeText;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.RootMatchers.withDecorView;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
+import static android.support.test.espresso.matcher.ViewMatchers.withHint;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static org.hamcrest.CoreMatchers.containsString;
@@ -197,6 +198,18 @@ public class MainActivityTest {
         //onView(withId(R.id.menu)).check(matches(withText(containsString("Lunch"))));
         onData(allOf(is(instanceOf(String.class)), is("Lunch"))).perform(click());
         onView(withId(R.id.closeAdd)).perform(click());
+    }
+
+    @Test
+    public void checkEdtitableHintDishName() {
+        clickMainAddButton();
+        onView(withId(R.id.dName)).check(matches(withHint("Name of Dish")));
+    }
+
+    @Test
+    public void checkEdtitableHintRecipe() {
+        clickMainAddButton();
+        onView(withId(R.id.grecipe)).check(matches(withHint("Recipe")));
     }
 
     @Test
