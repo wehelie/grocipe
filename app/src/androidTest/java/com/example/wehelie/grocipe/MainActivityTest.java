@@ -191,13 +191,13 @@ public class MainActivityTest {
     @Test
     public void makeANewGrocipeItem() {
         clickMainAddButton();
-        String dishName = "Pizza";
+        String dishName = "Pie";
         onView(withId(R.id.dName)).perform(typeText(dishName));
-        String recipe = "Cheese, Sauce, Dough";
+        String recipe = "Dough, AppleSauce, Sugar";
         onView(withId(R.id.grecipe)).perform(typeText(recipe));
         onView(withId(R.id.menu)).perform(click());
         //onView(withId(R.id.menu)).check(matches(withText(containsString("Lunch"))));
-        onData(allOf(is(instanceOf(String.class)), is("Lunch"))).perform(click());
+        onData(allOf(is(instanceOf(String.class)), is("Snack"))).perform(click());
         onView(withId(R.id.closeAdd)).perform(click());
     }
 
@@ -222,6 +222,20 @@ public class MainActivityTest {
     public void deleteGrocipeItem() {
         scrollToPosition();
         onView(withId(R.id.delete)).perform(click());
+    }
+
+
+    @Test
+    public void updateCardView() {
+        scrollToPosition();
+        String dishName = "Pie";
+        onView(withId(R.id.dName)).perform(typeText(dishName));
+        String recipe = "Dough, AppleSauce, Sugar";
+        onView(withId(R.id.grecipe)).perform(typeText(recipe));
+        onView(withId(R.id.menu)).perform(click());
+        //onView(withId(R.id.menu)).check(matches(withText(containsString("Lunch"))));
+        onData(allOf(is(instanceOf(String.class)), is("Snack"))).perform(click());
+        onView(withId(R.id.closeAdd)).perform(click());
     }
 
 
