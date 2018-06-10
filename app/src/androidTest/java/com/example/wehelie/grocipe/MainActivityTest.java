@@ -20,12 +20,16 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import static android.support.test.espresso.Espresso.onData;
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
+import static org.hamcrest.CoreMatchers.containsString;
+import static org.hamcrest.CoreMatchers.instanceOf;
+import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.not;
 import static org.hamcrest.Matchers.allOf;
 
@@ -101,15 +105,44 @@ public class MainActivityTest {
     }
 
     @Test
-    public void checkDishNameField() {
+    public void checkDishNameFieldExists() {
         onView(withId(R.id.floatingButtonMain)).perform(click());
         onView(withId(R.id.dName)).check(matches(isDisplayed()));
     }
 
     @Test
-    public void checkRecipeField() {
+    public void checkRecipeFieldExists() {
         onView(withId(R.id.floatingButtonMain)).perform(click());
         onView(withId(R.id.grecipe)).check(matches(isDisplayed()));
+    }
+
+    @Test
+    public void CheckMenuSpinnerExists() {
+        onView(withId(R.id.floatingButtonMain)).perform(click());
+        onView(withId(R.id.menu)).perform(click());
+    }
+
+    @Test
+    public void openSpinnerSelection() {
+        onView(withId(R.id.floatingButtonMain)).perform(click());
+        onView(withId(R.id.closeAdd)).check(matches(isDisplayed()));
+    }
+
+    @Test
+    public void selectSpinnerMenuItem() {
+        onView(withId(R.id.floatingButtonMain)).perform(click());
+        onView(withId(R.id.menu)).perform(click());
+        //onView(withId(R.id.menu)).check(matches(withText(containsString("Lunch"))));
+        onData(allOf(is(instanceOf(String.class)), is("Lunch"))).perform(click());
+    }
+
+
+
+
+    @Test
+    public void closeAddButtonExists() {
+        onView(withId(R.id.floatingButtonMain)).perform(click());
+        onView(withId(R.id.closeAdd)).check(matches(isDisplayed()));
     }
 
 
