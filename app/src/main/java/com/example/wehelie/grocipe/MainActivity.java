@@ -47,7 +47,7 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewAdapt
         setContentView(R.layout.activity_main);
 
         menu = findViewById(R.id.menu);
-        Addbutton = findViewById(R.id.floatingButton);
+        Addbutton = findViewById(R.id.floatingButtonMain);
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, menuList);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         menu.setAdapter(adapter);
