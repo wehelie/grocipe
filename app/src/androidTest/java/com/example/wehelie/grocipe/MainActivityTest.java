@@ -23,6 +23,7 @@ import org.junit.runner.RunWith;
 import static android.support.test.espresso.Espresso.onData;
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
+import static android.support.test.espresso.action.ViewActions.typeText;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
@@ -104,6 +105,7 @@ public class MainActivityTest {
         onView(withId(R.id.floatingButtonMain)).perform(click());
     }
 
+
     @Test
     public void checkDishNameFieldExists() {
         onView(withId(R.id.floatingButtonMain)).perform(click());
@@ -143,6 +145,39 @@ public class MainActivityTest {
     public void closeAddButtonExists() {
         onView(withId(R.id.floatingButtonMain)).perform(click());
         onView(withId(R.id.closeAdd)).check(matches(isDisplayed()));
+    }
+
+    @Test
+    public void clickOnCloseAddButton() {
+        clickMainAddButton();
+        onView(withId(R.id.closeAdd)).perform(click());
+    }
+
+    @Test
+    public void populateGrocipeDishNameField() {
+        clickMainAddButton();
+        String dishName = "Pizza";
+        onView(withId(R.id.dName)).perform(typeText(dishName));
+    }
+
+    @Test
+    public void populateGrocipeRecipeField() {
+        clickMainAddButton();
+        String recipe = "Cheese, Sauce, Dough";
+        onView(withId(R.id.grecipe)).perform(typeText(recipe));
+    }
+
+    @Test
+    public void makeANewGrocipeItem() {
+        clickMainAddButton();
+        String dishName = "Pizza";
+        onView(withId(R.id.dName)).perform(typeText(dishName));
+        String recipe = "Cheese, Sauce, Dough";
+        onView(withId(R.id.grecipe)).perform(typeText(recipe));
+        onView(withId(R.id.menu)).perform(click());
+        //onView(withId(R.id.menu)).check(matches(withText(containsString("Lunch"))));
+        onData(allOf(is(instanceOf(String.class)), is("Lunch"))).perform(click());
+        onView(withId(R.id.closeAdd)).perform(click());
     }
 
 
