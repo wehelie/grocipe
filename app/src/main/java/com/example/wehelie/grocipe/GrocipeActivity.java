@@ -12,23 +12,24 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.Toast;
 //import android.widget.Toolbar;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 
+import es.dmoral.toasty.Toasty;
+
 public class GrocipeActivity extends AppCompatActivity {
+
     EditText nDish;
     EditText gRecipe;
-    Button close;
+    Button closeAdd;
     Button delete;
     boolean isItemNew = false;
     Spinner menu;
-
-
-    public ArrayList<String> spinnerList = new ArrayList<>(Arrays.asList(Constants.meals));
+    public ArrayList<String> menuList = new ArrayList<>(Arrays.asList(Constants.meals));
     AppDatabase gDatabase;
-
     Grocipe updateGrocery;
 
     @Override
@@ -36,32 +37,45 @@ public class GrocipeActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add);
 
-        menu = findViewById(R.id.spinner);
+        // find views
+        menu = findViewById(R.id.menu);
         nDish = findViewById(R.id.dName);
-        close = findViewById(R.id.close);
+        closeAdd = findViewById(R.id.closeAdd);
         gRecipe = findViewById(R.id.grecipe);
-        delete = findViewById(R.id.btnDelete);
+        delete = findViewById(R.id.delete);
 
-
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, spinnerList);
+        // drop down menu for mealtypes
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, menuList);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         menu.setAdapter(adapter);
 
+        // Creates a RoomDatabase.Builder for a persistent database.
         gDatabase = Room.databaseBuilder(getApplicationContext(), AppDatabase.class, AppDatabase.DATABASE_NAME).build();
 
-        int grocipe_id = getIntent().getIntExtra("id", -100);
+        // setup id
+        int grocipe_id = getIntent().getIntExtra(Constants.GROCIPE_ID, -100);
 
-        if (grocipe_id  == -100)
+        // check if id is defaultValue
+        if (grocipe_id  == -100) {
             isItemNew = true;
-
+        }
+        // if it is not a new item, show the delete button
         if (!isItemNew) {
             fetchById(grocipe_id );
             delete.setVisibility(View.VISIBLE);
         }
 
-        close.setOnClickListener(new View.OnClickListener() {
+
+        closeAdd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                // check to see if the fields are empgty
+                if (nDish.getText().toString().matches("") || gRecipe.getText().toString().matches("")) {
+                    Toasty.warning(getApplicationContext(), "Please fill out all required fields!", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+
                 if (isItemNew) {
                     Grocipe grocipe = new Grocipe();
                     grocipe.dishName = nDish.getText().toString();
@@ -80,6 +94,7 @@ public class GrocipeActivity extends AppCompatActivity {
             }
         });
 
+        // delete an item from the grocipe list
         delete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -89,7 +104,7 @@ public class GrocipeActivity extends AppCompatActivity {
     }
 
 
-
+    // method to insert row into database
     @SuppressLint("StaticFieldLeak")
     private void insertRow(Grocipe grocipe) {
         new AsyncTask<Grocipe, Void, Long>() {
@@ -103,7 +118,7 @@ public class GrocipeActivity extends AppCompatActivity {
                 super.onPostExecute(id);
 
                 Intent intent = getIntent();
-                intent.putExtra(Constants.ISNEW, true).putExtra("id", id);
+                intent.putExtra(Constants.ISNEW, true).putExtra(Constants.GROCIPE_ID, id);
                 setResult(RESULT_OK, intent);
                 finish();
             }
@@ -111,6 +126,7 @@ public class GrocipeActivity extends AppCompatActivity {
 
     }
 
+    // get an item by id
     @SuppressLint("StaticFieldLeak")
     private void fetchById(final int grocipe_id) {
         new AsyncTask<Integer, Void, Grocipe>() {
@@ -126,7 +142,7 @@ public class GrocipeActivity extends AppCompatActivity {
                 super.onPostExecute(grocipe);
                 nDish.setText(grocipe.dishName);
                 gRecipe.setText(grocipe.recipe);
-                menu.setSelection(spinnerList.indexOf(grocipe.mealtype));
+                menu.setSelection(menuList.indexOf(grocipe.mealtype));
 
                 updateGrocery = grocipe;
             }
@@ -134,6 +150,7 @@ public class GrocipeActivity extends AppCompatActivity {
 
     }
 
+    // deletes a row in database
     @SuppressLint("StaticFieldLeak")
     private void deleteRow(Grocipe grocipe) {
         new AsyncTask<Grocipe, Void, Integer>() {
@@ -147,7 +164,7 @@ public class GrocipeActivity extends AppCompatActivity {
                 super.onPostExecute(number);
 
                 Intent intent = getIntent();
-                intent.putExtra(Constants.ISDELETED, true).putExtra("number", number);
+                intent.putExtra(Constants.ISDELETED, true).putExtra(Constants.NUMS, number);
                 setResult(RESULT_OK, intent);
                 finish();
             }
@@ -156,6 +173,7 @@ public class GrocipeActivity extends AppCompatActivity {
     }
 
 
+    // updates row in database
     @SuppressLint("StaticFieldLeak")
     private void updateRow(Grocipe grocipe) {
         new AsyncTask<Grocipe, Void, Integer>() {
@@ -169,7 +187,7 @@ public class GrocipeActivity extends AppCompatActivity {
                 super.onPostExecute(number);
 
                 Intent intent = getIntent();
-                intent.putExtra(Constants.ISNEW, false).putExtra("number", number);
+                intent.putExtra(Constants.ISNEW, false).putExtra(Constants.NUMS, number);
                 setResult(Activity.RESULT_OK, intent);
                 finish();
             }

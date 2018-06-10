@@ -1,15 +1,10 @@
 package com.example.wehelie.grocipe;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.arch.persistence.room.Room;
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.graphics.Color;
-import android.graphics.PorterDuff;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -18,6 +13,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.Toast;
@@ -39,33 +35,45 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewAdapt
     ArrayList<Grocipe> grocipeArrayList = new ArrayList<>();
     ProgressBar progressBar;
 
+    EditText nDish;
+    EditText gRecipe;
+
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        menu = findViewById(R.id.spinner);
+        menu = findViewById(R.id.menu);
         Addbutton = findViewById(R.id.floatingButton);
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, menuList);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         menu.setAdapter(adapter);
 
+        nDish = findViewById(R.id.dName);
+        gRecipe = findViewById(R.id.grecipe);
 
         recyclerView = findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerViewAdapter = new RecyclerViewAdapter(this);
         recyclerView.setAdapter(recyclerViewAdapter);
 
+        // Creates a RoomDatabase.Builder for a persistent database.
         gDatabase = Room.databaseBuilder(getApplicationContext(), AppDatabase.class, AppDatabase.DATABASE_NAME).fallbackToDestructiveMigration().build();
         checkFirstRun();
 
+        // register a callback to be invoked when an item in this AdapterView has been selected.
         menu.setOnItemSelectedListener(this);
+        // Sets the currently selected item
         menu.setSelection(0);
 
         Addbutton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
+                Toasty.success(getApplicationContext(), "Create a new grocipe card or edit exiting one", Toast.LENGTH_SHORT).show();
+
                 startActivityForResult(new Intent(MainActivity.this, GrocipeActivity.class), Constants.NEW_REQUEST_CODE);
             }
         });
@@ -87,7 +95,7 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewAdapt
 
             } else if (requestCode == Constants.UPDATE_REQUEST_CODE) {
                 boolean isDeleted = data.getBooleanExtra("isDeleted", false);
-                int number = data.getIntExtra("number", -1);
+                int number = data.getIntExtra(Constants.NUMS, -1);
                 if (isDeleted) {
                     Toasty.info(getApplicationContext(), number + " Deleted!", Toast.LENGTH_SHORT).show();
                 } else {
@@ -104,7 +112,7 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewAdapt
     }
 
     private void checkFirstRun() {
-     Boolean isFirstRun = getSharedPreferences("PREFERENCE", MODE_PRIVATE).getBoolean("isFirstRun", true);
+     Boolean isFirstRun = getSharedPreferences(Constants.PREFS, MODE_PRIVATE).getBoolean("isFirstRun", true);
 
      if (isFirstRun) {
          Toasty.success(getApplicationContext(), "Click on the + button to start", Toast.LENGTH_SHORT).show();
