@@ -239,6 +239,15 @@ public class MainActivityTest {
     }
 
 
+    @Test
+    public void verifyInfoFromDatabase() {
+        scrollToPosition();
+        onView(withId(R.id.dName)).check(matches(withText("Pizza")));
+        //onView(withId(R.id.displayName)).check(matches(withText("Thisis afakeuser")));
+        //onView(withId(R.id.photoUrl)).check(matches(withText("https://i.imgur.com/ZYVZT1d.jpg")));
+    }
+
+
 
     private static Matcher<View> childAtPosition(
             final Matcher<View> parentMatcher, final int position) {
